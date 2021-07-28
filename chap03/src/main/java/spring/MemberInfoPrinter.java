@@ -1,8 +1,12 @@
 package spring;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class MemberInfoPrinter {
 	
+	@Autowired
 	private MemberDao memberDao;
+	@Autowired
 	private MemberPrinter memberPrinter;
 	
 	public void printMemberInfo(String email) {
@@ -12,14 +16,5 @@ public class MemberInfoPrinter {
 		memberPrinter.print(member);
 		System.out.println();
 	}
-
-	public void setMemberDao(MemberDao memberDao) {
-		this.memberDao = memberDao;
-	}
-
-	public void setMemberPrinter(MemberPrinter memberPrinter) {
-		this.memberPrinter = memberPrinter;
-	}
-	
 	
 }

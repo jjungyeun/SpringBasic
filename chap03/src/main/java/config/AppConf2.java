@@ -44,10 +44,14 @@ public class AppConf2 {
 	
 	@Bean
 	public MemberInfoPrinter infoPrinter() {
-		// setter를 이용하여 memberDao 빈, memberPrinter 빈 주입
 		MemberInfoPrinter memberInfoPrinter = new MemberInfoPrinter();
-		memberInfoPrinter.setMemberDao(memberDao);
-		memberInfoPrinter.setMemberPrinter(memberPrinter);
+		
+		// ** MemberInfoPrinter 클래스에서 @Autowired를 이용해 객체를 주입했으므로 setter 필요 없어짐 **
+		
+//		// setter를 이용하여 memberDao 빈, memberPrinter 빈 주입
+//		memberInfoPrinter.setMemberDao(memberDao);
+//		memberInfoPrinter.setMemberPrinter(memberPrinter);
+		
 		return memberInfoPrinter;
 	}
 	

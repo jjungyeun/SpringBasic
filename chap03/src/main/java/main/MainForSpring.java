@@ -9,6 +9,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import config.AppConf1;
 import config.AppConf2;
+import config.AppConfImport;
 import spring.ChangePasswordService;
 import spring.DuplicateMemberException;
 import spring.MemberInfoPrinter;
@@ -24,8 +25,15 @@ public class MainForSpring {
 	
 	public static void main(String[] args) throws IOException {
 		
-		// 설정 클래스를 이용해서 스프링 컨테이너를 생성
-		ctx = new AnnotationConfigApplicationContext(AppConf1.class, AppConf2.class);
+		// --- 설정 클래스를 이용해서 스프링 컨테이너를 생성 ---
+		
+		// 설정 클래스가 여러개인 경우에는 모든 설정 클래스를 파라미터로 전달하면 된다.
+//		ctx = new AnnotationConfigApplicationContext(AppConf1.class, AppConf2.class);
+		
+		// @Import를 통해 모든 설정 클래스를 상위 설정 클래스 하나에 통합한 case
+		ctx = new AnnotationConfigApplicationContext(AppConfImport.class);
+		
+		// -----------------------------------------
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		
