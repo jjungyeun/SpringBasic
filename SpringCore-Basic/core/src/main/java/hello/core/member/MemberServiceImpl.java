@@ -1,5 +1,9 @@
 package hello.core.member;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class MemberServiceImpl implements MemberService {
 
 //    // MemberRepository에 대한 구현 객체 선택
@@ -8,6 +12,8 @@ public class MemberServiceImpl implements MemberService {
 
     // 생성자를 통해서 memberRepository에 뭐가 들어갈지 선택하도록 만듦 (구현체에 대한 내용이 없어짐) -> DIP 지킴
     private final MemberRepository memberRepository;
+
+    @Autowired  // getBean(MemberRepository.class)와 같음
     public MemberServiceImpl(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
