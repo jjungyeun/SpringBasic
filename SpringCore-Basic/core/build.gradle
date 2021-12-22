@@ -24,6 +24,9 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	// lombok library
 
+	// web 라이브러리 추가
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
 	testImplementation ('org.springframework.boot:spring-boot-starter-test'){
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
