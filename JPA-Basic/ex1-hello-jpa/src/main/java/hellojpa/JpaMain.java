@@ -34,7 +34,7 @@ public class JpaMain {
             // update Member
             // 다시 persist 해줄 필요 없음(변경 감지). 자바 컬랙션을 다루는 것과 유사함
             Member findedMember = em.find(Member.class, 1L);
-            findedMember.setName("jungyeun");
+            findedMember.setUserName("jungyeun");
 
             transaction.commit();
         }

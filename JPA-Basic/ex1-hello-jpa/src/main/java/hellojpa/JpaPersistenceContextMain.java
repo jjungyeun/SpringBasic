@@ -19,7 +19,7 @@ public class JpaPersistenceContextMain {
             // 비영속 상태
             Member member = new Member();
             member.setId(3L);
-            member.setName("dongyeun");
+            member.setUserName("dongyeun");
 
             // 영속 상태 -> persist할 때 insert되는 것 아님
             System.out.println("== BEFORE ==");
