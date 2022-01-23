@@ -1,11 +1,12 @@
 package jpabook.jpashop.main;
 
-import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.Book;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.time.LocalDateTime;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -18,7 +19,17 @@ public class JpaMain {
         transaction.begin();
 
         try {
-
+            Book book = new Book();
+            book.setName("JPA Book");
+            book.setPrice(15000);
+            book.setStockQuantity(5);
+            book.setAuthor("김영한");
+            book.setIsbn("1234");
+            book.setCreatedBy("원정연");
+            book.setCreatedDate(LocalDateTime.now());
+            book.setLastModifiedBy("원정연");
+            book.setLastModifiedDate(LocalDateTime.now());
+            em.persist(book);
 
             transaction.commit();
         }
