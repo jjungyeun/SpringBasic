@@ -14,84 +14,101 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member0 = new Member();
-            member0.setAge(26);
-            member0.setName("member1");
-            em.persist(member0);
-
-            Team team = new Team();
-            team.setName("team1");
-            team.addMember(member0);
-            em.persist(team);
+            Member member1 = new Member();
+            member1.setAge(26);
+            member1.setName("member1");
+            em.persist(member1);
 
             Member member2 = new Member();
             member2.setAge(24);
             member2.setName("member2");
             em.persist(member2);
 
+            Member member3 = new Member();
+            member3.setAge(25);
+            member3.setName("member3");
+            em.persist(member3);
+
+            Member member4 = new Member();
+            member4.setAge(27);
+            member4.setName("member4");
+            em.persist(member4);
+
+            Team team = new Team();
+            team.setName("team1");
+            team.addMember(member1);
+            team.addMember(member2);
+            em.persist(team);
+
             Team team2 = new Team();
             team2.setName("team2");
-            team2.addMember(member2);
+            team2.addMember(member3);
             em.persist(team2);
 
-            em.flush();
+            Team team3 = new Team();
+            team3.setName("team3");
+            em.persist(team3);
+
+//            em.flush();
+//            em.clear();
+
+            //== query ==//
+//            String query = "select m from Member m";
+//            List<Member> result = em.createQuery(query, Member.class).getResultList();
+//
+//            for (Member member : result) {
+//                System.out.println("member = " + member.getName() + ", " + member.getTeam().getName());
+//                // member1, team1 (SQL)
+//                // member2, team1 (1차 캐시)
+//                // member3, team2 (SQL)
+//                // member4, null (필요 객체 없음)
+//
+//                // 회원 100명 -> 최악의 경우 쿼리 100개 추가. (N+1 쿼리 문제)
+//                // 지연로딩을 하더라도 추가 쿼리가 생기지 않는 게 아님
+//                // => fetch join 사용
+//            }
+
+//            // fetch join
+//            String fetchQuery = "select m from Member m join fetch m.team";
+//            List<Member> fetchResult = em.createQuery(fetchQuery, Member.class).getResultList();
+//            for (Member member : fetchResult) {
+//                System.out.println("member = " + member.getName() + ", " + member.getTeam().getName());
+//                // fetch join으로 이미 한번에 다 실제 객체를 불러옴
+//                // 지연로딩 설정 돼있어도 fetch join이 우선임
+//            }
+
+//            // fetch join - collection
+////            String fetchCollectionQuery = "select t from Team t join fetch t.members where t.name = 'team1'";
+//            String fetchCollectionQuery = "select distinct t from Team t join fetch t.members where t.name = 'team1'";
+//            List<Team> fetchCollectionResult = em.createQuery(fetchCollectionQuery, Team.class).getResultList();
+//            for (Team t : fetchCollectionResult) {
+//                System.out.println("team = " + t.getName() + ", " + t.getMembers());
+//                // team1에 속한 멤버가 2명이기 때문에 team1 객체가 결과(fetchCollectionResult)에 두번 들어감
+//                // distinct 넣으면 애플리케이션 레벨에서 엔티티 중복도 처리해줌!
+//            }
+
+//            // Named Query
+//            List<Member> namedMember = em.createNamedQuery("Member.findByName", Member.class)
+//                    .setParameter("name", "member1")
+//                    .getResultList();
+//            for (Member member : namedMember) {
+//                System.out.println("member = " + member);
+//            }
+
+            // Bulk Operation
+            // 쿼리 한번에 관련 객체 정보 업데이트
+            // 영속성 컨텍스트에는 수정 안되므로 영속성 컨텍스트 초기화해주어야 함
+            String bulkQuery = "update Member m set m.age = 20";
+            int resultCnt = em.createQuery(bulkQuery)
+                    .executeUpdate();
+            System.out.println("resultCnt = " + resultCnt); // 변경된 row 개수 반환
+
+            Member findMember = em.find(Member.class, member1.getId());
+            System.out.println("Before Clear: findMember.getAge() = " + findMember.getAge());   // != 20 (1차 캐시에는 반영 안됨)
+
             em.clear();
-
-            // 반환 타입이 명확하면 TypedQuery 클래스 사용
-            TypedQuery<Member> query1 = em.createQuery("select m from Member m", Member.class);
-            TypedQuery<String> query2 = em.createQuery("select m.name from Member m where m.name = 'member1'", String.class);
-            // 반환 타입이 명확하지 않은 경우 Query 클래스 사용
-            Query query3 = em.createQuery("select m.name, m.age from Member m");
-
-            // 결과가 하나 이상일 때 getResultList() 사용. 결과 없으면 빈 리스트 반환
-            List<Member> members = query1.getResultList();
-            // 결과가 단 하나일 때 getSingleList() 사용. 결과 없어도, 2개 이상이어도 exception 발생
-            // Spring Data JPA에서 결과 하나만 반환하는 함수는 결과 없으면 null 반환하도록 제공해줌
-            String member1 = query2.getSingleResult();
-
-            // 파라미터 바인딩
-            TypedQuery<Member> query4 = em.createQuery("select m from Member m where m.name = :name", Member.class);
-            query4.setParameter("name", "WJY");
-            Member WJY = query4.getSingleResult();
-            System.out.println("WJY = " + WJY);
-
-            // 프로젝션 -  여러 값 조회 시 new 명령어로 조회하는 방법
-            List<MemberDto> resultList = em.createQuery("select new jpqltest.dto.MemberDto(m.name, m.age) from Member m", MemberDto.class)
-                    .getResultList();
-            for (MemberDto memberDto : resultList) {
-                System.out.println("memberDto = " + memberDto);
-            }
-
-            // 페이징
-            List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class)
-                    .setFirstResult(0)
-                    .setMaxResults(5)
-                    .getResultList();
-            System.out.println("result.size() = " + result.size());
-            for (Member member : result) {
-                System.out.println(member);
-            }
-
-            // 조인
-            String jpql = "select m from Member m inner join m.team t";
-            String jpql2 = "select m from Member m left join m.team t";
-            String jpql3 = "select m, t from Member m, Team t where m.name = t.name";
-            // 연관관계 없는 외부 조인 (멤버 이름 = 팀 이름)인 멤버, 팀 쌍 조회
-            String jpql4 = "select m, t from Member m left join Team t on m.name = t.name";
-            List<Object[]> resultList2 = em.createQuery(jpql4, Object[].class)
-                    .getResultList();
-            for (Object[] objects : resultList2) {
-                System.out.println("objects[0] = " + (Member)objects[0]);
-                System.out.println("objects[1] = " + (Team)objects[1]);
-            }
-
-            // 사용자 정의 함수 사용
-            String jpql5 = "select function('group_concat', m.name) from Member m";
-            List<String> concatResult = em.createQuery(jpql5, String.class)
-                    .getResultList();
-            for (String s : concatResult) {
-                System.out.println("s = " + s);
-            }
+            findMember = em.find(Member.class, member1.getId());
+            System.out.println("After Clear: findMember.getAge() = " + findMember.getAge());   // == 20 (DB에서 다시 불러옴)
 
 
             tx.commit();
