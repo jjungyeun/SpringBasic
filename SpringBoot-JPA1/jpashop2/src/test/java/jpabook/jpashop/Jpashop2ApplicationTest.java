@@ -1,0 +1,14 @@
+package jpabook.jpashop;
+
+import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.Assert.*;
+
+@SpringBootTest
+public class Jpashop2ApplicationTest {
+    @Test
+    public void contextLoads(){
+
+    }
+}
