@@ -10,4 +10,10 @@ public class Jpashop2Application {
         SpringApplication.run(Jpashop2Application.class, args);
     }
 
+//    // 엔티티를 API에 노출하는 경우에 필요
+//    @Bean
+//    Hibernate5Module hibernate5Module(){
+//        return new Hibernate5Module();
+//    }
+
 }

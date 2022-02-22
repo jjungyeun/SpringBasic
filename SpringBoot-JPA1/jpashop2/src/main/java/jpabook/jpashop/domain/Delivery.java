@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class Delivery {
     private Long id;
 
     @OneToOne(mappedBy = "delivery")
+    @JsonIgnore
     private Order order;
 
     @Enumerated(STRING)
