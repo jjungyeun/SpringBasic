@@ -31,4 +31,11 @@ public class Member {
         member.setAddress(address);
         return member;
     }
+
+    public static Member createMember(String name){
+        Member member = new Member();
+        member.setName(name);
+        member.setAddress(new Address());
+        return member;
+    }
 }
