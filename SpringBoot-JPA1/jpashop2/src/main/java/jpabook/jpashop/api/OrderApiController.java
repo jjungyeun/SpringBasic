@@ -26,7 +26,7 @@ public class OrderApiController {
 
     @GetMapping("/api/v1/orders")
     public List<Order> ordersV1(){
-        List<Order> orders = orderRepository.findAll(new OrderSearch());
+        List<Order> orders = orderRepository.findAllByCriteria(new OrderSearch());
         for (Order order : orders) {
             // LAZY 강제 초기화
             order.getMember().getName();
@@ -40,7 +40,7 @@ public class OrderApiController {
     @GetMapping("/api/v2/orders")
     public List<OrderDto> ordersV2(){
         // 1+N 문제로 인해 쿼리가 매~우 많이 나가게 됨!
-        List<Order> orders = orderRepository.findAll(new OrderSearch());
+        List<Order> orders = orderRepository.findAllByCriteria(new OrderSearch());
         return orders.stream()
                 .map(OrderDto::new)
                 .collect(toList());

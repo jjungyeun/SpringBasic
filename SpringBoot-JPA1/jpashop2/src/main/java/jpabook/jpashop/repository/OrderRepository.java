@@ -26,7 +26,10 @@ public class OrderRepository {
         return em.find(Order.class, id);
     }
 
-    public List<Order> findAll(OrderSearch orderSearch){
+//    public List<Order> findAll(OrderSearch orderSearch){
+//    }
+
+    public List<Order> findAllByCriteria(OrderSearch orderSearch){
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Order> cq = cb.createQuery(Order.class);
         Root<Order> o = cq.from(Order.class);

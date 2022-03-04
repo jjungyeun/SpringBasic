@@ -36,7 +36,7 @@ public class OrderSimpleApiController {
         // Jackson 라이브러리가 프록시 객체를 json으로 생성하는 방법을 모름 -> 예외 발생
         // Hibernate5 모듈을 등록하면 어느정도 해결은 가능, but Lazy loading 문제 때문에 사용하기엔 오바임
         // 그냥 API에 Entity 넘기지 말기~~
-        List<Order> orders = orderRepository.findAll(new OrderSearch());
+        List<Order> orders = orderRepository.findAllByCriteria(new OrderSearch());
         for (Order order : orders) {
             // LAZY 강제 초기화
             order.getMember().getName();
@@ -48,7 +48,7 @@ public class OrderSimpleApiController {
     @GetMapping("/api/v2/simple-orders")
     @ResponseBody
     public List<SimpleOrderDto> ordersV2(){
-        List<Order> orders = orderRepository.findAll(new OrderSearch());
+        List<Order> orders = orderRepository.findAllByCriteria(new OrderSearch());
         // Lazy Loading 때문에 order마다 member, delivery를 조회
         // -> order 1개당 2번의 select 쿼리가 추가적으로 실행됨 (N+1 Problem)
         return orders.stream()
