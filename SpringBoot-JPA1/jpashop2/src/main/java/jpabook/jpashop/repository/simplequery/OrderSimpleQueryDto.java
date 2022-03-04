@@ -1,7 +1,6 @@
-package jpabook.jpashop.repository.order;
+package jpabook.jpashop.repository.simplequery;
 
 import jpabook.jpashop.domain.Address;
-import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderStatus;
 import lombok.Data;
 
