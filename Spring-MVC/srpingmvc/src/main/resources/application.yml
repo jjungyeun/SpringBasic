@@ -1,0 +1,4 @@
+# ?? ?? ?? ?? (default: info)
+logging:
+  level:
+    hello.springmvc: debug
