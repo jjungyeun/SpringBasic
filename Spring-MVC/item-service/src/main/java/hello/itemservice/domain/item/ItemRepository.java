@@ -24,7 +24,7 @@ public class ItemRepository {
         return new ArrayList<>(store.values());
     }
 
-    public void update(Long itemId, ItemUpdateDto updateDto) {
+    public Optional<Item> update(Long itemId, ItemUpdateDto updateDto) {
         Optional<Item> optionalItem = findById(itemId);
         if (optionalItem.isPresent()){
             Item findItem = optionalItem.get();
@@ -35,6 +35,7 @@ public class ItemRepository {
             if (updateDto.getQuantity() != null)
                 findItem.setQuantity(updateDto.getQuantity());
         }
+        return optionalItem;
     }
 
     public void clearStore(){

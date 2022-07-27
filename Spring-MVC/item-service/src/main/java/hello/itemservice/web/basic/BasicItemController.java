@@ -2,6 +2,7 @@ package hello.itemservice.web.basic;
 
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
+import hello.itemservice.dto.ItemUpdateDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -47,9 +48,28 @@ public class BasicItemController {
 //        // ModelAttribute에 이름을 생략하면 클래스명을 첫번째만 소문자로 바꿔서 model에 넣어줌 (Item -> item)
 //        model.addAttribute("item", item);
 
-        // item 조회 뷰 재활용
-        return "basic/item";
+        // 새로고침 시 계속 form이 제출되는 문제를 방지하기 위해, 상품 상세 페이지로 redirect
+        return "redirect:/basic/items/" + item.getId();
     }
+
+    @GetMapping("/{itemId}/edit")
+    public String editForm(@PathVariable Long itemId, Model model){
+        Item item = itemRepository.findById(itemId)
+                .orElse(null);
+        model.addAttribute("item", item);
+        return "basic/editForm";
+    }
+
+    @PostMapping("/{itemId}/edit")
+    public String edit(@PathVariable Long itemId,
+                       @ModelAttribute ItemUpdateDto updateDto,
+                       Model model){
+        Item item = itemRepository.update(itemId, updateDto)
+                .orElse(null);
+        model.addAttribute("item", item);
+        return "redirect:/basic/items/{itemId}";
+    }
+
 
     /**
      * 테스트용 데이터 추가
