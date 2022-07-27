@@ -6,9 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -33,6 +31,23 @@ public class BasicItemController {
         Item item = itemRepository.findById(itemId)
                 .orElse(null);
         model.addAttribute("item", item);
+        return "basic/item";
+    }
+
+    @GetMapping("/add")
+    public String addForm(){
+        return "basic/addForm";
+    }
+
+    @PostMapping("/add")
+    public String save(@ModelAttribute Item item){
+        itemRepository.save(item);
+
+//        // model에 직접 넣어주지 않아도됨. ModelAttribute가 알아서 model에 넣어감
+//        // ModelAttribute에 이름을 생략하면 클래스명을 첫번째만 소문자로 바꿔서 model에 넣어줌 (Item -> item)
+//        model.addAttribute("item", item);
+
+        // item 조회 뷰 재활용
         return "basic/item";
     }
 
