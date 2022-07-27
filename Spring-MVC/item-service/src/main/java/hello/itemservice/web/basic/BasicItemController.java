@@ -2,12 +2,13 @@ package hello.itemservice.web.basic;
 
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
-import hello.itemservice.dto.ItemUpdateDto;
+import hello.itemservice.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -40,7 +41,7 @@ public class BasicItemController {
         return "basic/addForm";
     }
 
-    @PostMapping("/add")
+//    @PostMapping("/add")
     public String save(@ModelAttribute Item item){
         itemRepository.save(item);
 
@@ -50,6 +51,29 @@ public class BasicItemController {
 
         // 새로고침 시 계속 form이 제출되는 문제를 방지하기 위해, 상품 상세 페이지로 redirect
         return "redirect:/basic/items/" + item.getId();
+    }
+
+//    @PostMapping("/add")
+    public String save2(@ModelAttribute Item item, RedirectAttributes redirectAttributes){
+        Item saveItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", saveItem.getId());
+        redirectAttributes.addAttribute("status", true);
+
+        // redirect attribute에 넣은 attribute를 사용할 수 있음
+        // 사용하지 않은 정보는 query parameter로 들어감
+        return "redirect:/basic/items/{itemId}";
+    }
+
+    @PostMapping("/add")
+    public String save3(@ModelAttribute ItemDto createDto, RedirectAttributes redirectAttributes){
+        Item item = new Item(createDto.getName(), createDto.getPrice(), createDto.getQuantity());
+        itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", item.getId());
+        redirectAttributes.addAttribute("status", true);
+
+        // redirect attribute에 넣은 attribute를 사용할 수 있음
+        // 사용하지 않은 정보는 query parameter로 들어감
+        return "redirect:/basic/items/{itemId}";
     }
 
     @GetMapping("/{itemId}/edit")
@@ -62,7 +86,7 @@ public class BasicItemController {
 
     @PostMapping("/{itemId}/edit")
     public String edit(@PathVariable Long itemId,
-                       @ModelAttribute ItemUpdateDto updateDto,
+                       @ModelAttribute ItemDto updateDto,
                        Model model){
         Item item = itemRepository.update(itemId, updateDto)
                 .orElse(null);

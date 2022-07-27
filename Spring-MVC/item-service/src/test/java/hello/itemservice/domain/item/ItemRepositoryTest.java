@@ -1,8 +1,7 @@
 package hello.itemservice.domain.item;
 
-import hello.itemservice.dto.ItemUpdateDto;
+import hello.itemservice.dto.ItemDto;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -57,7 +56,7 @@ class ItemRepositoryTest {
         Long itemId = savedItem.getId();
 
         // when
-        ItemUpdateDto updateDto = ItemUpdateDto.builder()
+        ItemDto updateDto = ItemDto.builder()
                 .name("itemB")
                 .price(2000)
                 .build();

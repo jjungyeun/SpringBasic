@@ -1,6 +1,6 @@
 package hello.itemservice.domain.item;
 
-import hello.itemservice.dto.ItemUpdateDto;
+import hello.itemservice.dto.ItemDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -24,7 +24,7 @@ public class ItemRepository {
         return new ArrayList<>(store.values());
     }
 
-    public Optional<Item> update(Long itemId, ItemUpdateDto updateDto) {
+    public Optional<Item> update(Long itemId, ItemDto updateDto) {
         Optional<Item> optionalItem = findById(itemId);
         if (optionalItem.isPresent()){
             Item findItem = optionalItem.get();

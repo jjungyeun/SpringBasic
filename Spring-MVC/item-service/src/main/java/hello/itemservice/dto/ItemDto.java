@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ItemUpdateDto {
+public class ItemDto {
     private String name;
     private Integer price;
     private Integer quantity;
