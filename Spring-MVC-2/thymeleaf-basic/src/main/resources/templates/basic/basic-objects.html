@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>식 기본 객체 (Expression Basic Objects)</h1>
+<ul>
+    <li>request = [[${#request}]]</li>
+    <li>response = [[${#response}]]</li>
+    <li>session = [[${#session}]]</li>
+    <li>servletContext = [[${#servletContext}]]</li>
+    <li>locale = [[${#locale}]]</li>
+</ul>
+
+<h1>편의 객체</h1>
+<ul>
+    <li>Request Parameter = [[${param.paramData}]]</li>
+    <li>session = [[${session.sessionData}]]</li>
+    <li>spring bean = [[${@helloBean.hello("Spring!")}]]</li>
+</ul>
+
+
+
+</body>
+</html>
