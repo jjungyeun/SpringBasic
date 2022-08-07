@@ -32,7 +32,9 @@ public class FormItemController {
     }
 
     @GetMapping("/add")
-    public String addForm() {
+    public String addForm(Model model) {
+        // 타임리프의 form을 사용하려면 모델에 객체를 넘겨주어야 함
+        model.addAttribute("item", new Item());
         return "form/addForm";
     }
 
