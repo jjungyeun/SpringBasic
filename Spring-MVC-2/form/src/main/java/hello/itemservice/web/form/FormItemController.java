@@ -1,5 +1,6 @@
 package hello.itemservice.web.form;
 
+import hello.itemservice.domain.item.DeliveryCode;
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
 import hello.itemservice.domain.item.ItemType;
@@ -21,6 +22,11 @@ import java.util.Map;
 public class FormItemController {
 
     private final ItemRepository itemRepository;
+    private static final List<DeliveryCode> deliveryCodes = List.of(
+            new DeliveryCode("FAST", "빠른 배송"),
+            new DeliveryCode("NORMAL", "일반 배송"),
+            new DeliveryCode("SLOW", "느린 배송")
+    );
 
     // 현재 컨트롤러를 호출할 때마다 항상 Model에 이 값을 넣어줌
     @ModelAttribute("regions")
@@ -35,6 +41,11 @@ public class FormItemController {
     @ModelAttribute("itemTypes")
     public ItemType[] itemTypes() {
         return ItemType.values();
+    }
+
+    @ModelAttribute("deliveryCodes")
+    public List<DeliveryCode> deliveryCodes() {
+        return deliveryCodes;
     }
 
     @GetMapping
@@ -63,6 +74,7 @@ public class FormItemController {
         log.info("item.open={}", item.getOpen());
         log.info("item.regions={}", item.getRegions());
         log.info("item.itemType={}", item.getItemType());
+        log.info("item.deliveryCode={}", item.getDeliveryCode());
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
