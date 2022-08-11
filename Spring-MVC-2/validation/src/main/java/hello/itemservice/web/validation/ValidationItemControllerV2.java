@@ -11,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -25,6 +27,13 @@ import java.util.Map;
 public class ValidationItemControllerV2 {
 
     private final ItemRepository itemRepository;
+    private final ItemValidator itemValidator;
+
+    // 현재 컨트롤러가 요청될 때 항상 itemValidator를 검증기로 적용함
+    @InitBinder
+    public void init(WebDataBinder dataBinder){
+        dataBinder.addValidators(itemValidator);
+    }
 
     @GetMapping
     public String items(Model model) {
@@ -47,7 +56,8 @@ public class ValidationItemControllerV2 {
     }
 
     //    @PostMapping("/add")
-    public String addItemV2_1(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+    public String addItemV2_1(@ModelAttribute Item item,
+                              BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         // 검증 로직
         if (!StringUtils.hasText(item.getItemName()))
             bindingResult.addError(new FieldError("item", "itemName", "상품 이름은 필수입니다."));
@@ -77,7 +87,8 @@ public class ValidationItemControllerV2 {
     }
 
 //    @PostMapping("/add")
-    public String addItemV2_2(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+    public String addItemV2_2(@ModelAttribute Item item,
+                              BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         // 검증 로직
         if (!StringUtils.hasText(item.getItemName()))
             bindingResult.addError(new FieldError("item", "itemName", item.getItemName(), false, null, null, "상품 이름은 필수입니다."));
@@ -107,7 +118,8 @@ public class ValidationItemControllerV2 {
     }
 
 //    @PostMapping("/add")
-    public String addItemV2_3(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+    public String addItemV2_3(@ModelAttribute Item item,
+                              BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         // 검증 로직
         if (!StringUtils.hasText(item.getItemName()))
             bindingResult.addError(new FieldError("item", "itemName", item.getItemName(), false, new String[]{"required.item.itemName"}, null, null));
@@ -136,8 +148,9 @@ public class ValidationItemControllerV2 {
         return "redirect:/validation/v2/items/{itemId}";
     }
 
-    @PostMapping("/add")
-    public String addItemV2_4(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+//    @PostMapping("/add")
+    public String addItemV2_4(@ModelAttribute Item item,
+                              BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.info("objectName={}", bindingResult.getObjectName());
         log.info("target={}", bindingResult.getTarget());
 
@@ -159,6 +172,42 @@ public class ValidationItemControllerV2 {
         }
 
         // 검증에 실패하면 다시 입력 폼으로
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            return "validation/v2/addForm";
+        }
+
+        // 성공 로직
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/validation/v2/items/{itemId}";
+    }
+
+//    @PostMapping("/add")
+    public String addItemV2_5(@ModelAttribute Item item,
+                              BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+        // Validator를 통한 검증 로직 처리
+        if(itemValidator.supports(item.getClass()))
+            itemValidator.validate(item, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            return "validation/v2/addForm";
+        }
+
+        // 성공 로직
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/validation/v2/items/{itemId}";
+    }
+
+    @PostMapping("/add")
+    public String addItemV2_6(@Validated @ModelAttribute Item item,
+                              BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "validation/v2/addForm";
