@@ -1,5 +1,6 @@
 package hello.itemservice.domain.item;
 
+import hello.itemservice.web.validation.form.ItemUpdateForm;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -28,6 +29,13 @@ public class ItemRepository {
     }
 
     public void update(Long itemId, Item updateParam) {
+        Item findItem = findById(itemId);
+        findItem.setItemName(updateParam.getItemName());
+        findItem.setPrice(updateParam.getPrice());
+        findItem.setQuantity(updateParam.getQuantity());
+    }
+
+    public void update(Long itemId, ItemUpdateForm updateParam) {
         Item findItem = findById(itemId);
         findItem.setItemName(updateParam.getItemName());
         findItem.setPrice(updateParam.getPrice());
