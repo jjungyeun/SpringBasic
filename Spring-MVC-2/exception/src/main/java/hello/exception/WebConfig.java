@@ -1,20 +1,32 @@
 package hello.exception;
 
 import hello.exception.filter.LogFilter;
+import hello.exception.interceptor.LogInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 
 @Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    @Bean
+    private final LogInterceptor interceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(interceptor)
+                .order(1)
+                .addPathPatterns("/**")
+                // 오류 페이지 경로를 제외 패턴에 추가. DispatcherType으로 구분 불가능
+                .excludePathPatterns("/css/**", "*.ico", "/error", "/error-page/**");
+    }
+
+//    @Bean
     public FilterRegistrationBean logFilter(){
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new LogFilter());
