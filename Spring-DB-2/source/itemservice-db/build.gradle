@@ -22,10 +22,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	
-	// JdbcTemplate 추가
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+//	// JdbcTemplate 추가 - mybatis 라이브러리 및 data jpa 라이브러리에 포함되어있음
+//	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	// MyBatis 추가
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.1'
+	// JPA, 스프링 데이터 JPA 추가
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
 	// H2 데이터베이스 추가
 	runtimeOnly 'com.h2database:h2'
 
